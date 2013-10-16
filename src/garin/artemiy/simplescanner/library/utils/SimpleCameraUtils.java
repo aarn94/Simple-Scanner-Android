@@ -1,6 +1,6 @@
 package garin.artemiy.simplescanner.library.utils;
 
-import android.hardware.Camera;
+import android.content.res.Configuration;
 
 /**
  * Author: Artemiy Garin
@@ -8,28 +8,18 @@ import android.hardware.Camera;
  */
 public class SimpleCameraUtils {
 
-    public static Camera.Size getBestPreviewSize(int displayOrientation,
-                                                 int width,
-                                                 int height,
-                                                 Camera.Parameters parameters) {
-        double targetRatio = (double) width / height;
-        Camera.Size optimalSize = null;
-        double minDiff = Double.MAX_VALUE;
+    private static final int DEGREES_0 = 0;
+    private static final int DEGREES_90 = 90;
 
-        if (displayOrientation == 90 || displayOrientation == 270) {
-            targetRatio = (double) height / width;
+    public static int getOrientationDegree(Configuration configuration) {
+        switch (configuration.orientation) {
+            case Configuration.ORIENTATION_LANDSCAPE:
+                return DEGREES_0;
+            case Configuration.ORIENTATION_PORTRAIT:
+                return DEGREES_90;
+            default:
+                return DEGREES_0;
         }
-
-        for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
-            double ratio = (double) size.width / size.height;
-
-            if (Math.abs(ratio - targetRatio) < minDiff) {
-                optimalSize = size;
-                minDiff = Math.abs(ratio - targetRatio);
-            }
-        }
-
-        return optimalSize;
     }
 
 }
