@@ -21,12 +21,12 @@ public class MainActivity extends FragmentActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                fullScreen(activity, true);
+                configureFullScreen(activity, true);
             }
         }, DELAY);
     }
 
-    private static void fullScreen(Activity activity, boolean isEnabled) {
+    private static void configureFullScreen(Activity activity, boolean isEnabled) {
         if (isEnabled) {
             WindowManager.LayoutParams attrs = activity.getWindow().getAttributes();
             attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;

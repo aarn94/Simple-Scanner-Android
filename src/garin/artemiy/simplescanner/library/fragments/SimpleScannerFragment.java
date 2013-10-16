@@ -1,5 +1,6 @@
 package garin.artemiy.simplescanner.library.fragments;
 
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -22,14 +23,15 @@ public class SimpleScannerFragment extends Fragment {
     private static final String GREY_COLOR_SPACE = "Y800";
     private static final long REFRESH_TIME = 2000;
 
+    private ImageScanner scanner;
+    private SimpleCameraView cameraView;
+    private PackageManager packageManager;
+    private Handler autoFocusHandler = new Handler();
+    private Camera.PreviewCallback previewCallback = new CustomPreviewCallback();
+
     static {
         System.loadLibrary(Z_BAR_LIBRARY);
     }
-
-    private ImageScanner scanner;
-    private SimpleCameraView cameraView;
-    private Handler autoFocusHandler = new Handler();
-    private Camera.PreviewCallback previewCallback = new CustomPreviewCallback();
 
     private Camera.AutoFocusCallback autoFocusCallback = new Camera.AutoFocusCallback() {
         public void onAutoFocus(boolean success, Camera camera) {
@@ -39,13 +41,17 @@ public class SimpleScannerFragment extends Fragment {
 
     private Runnable runAutoFocus = new Runnable() {
         public void run() {
-            try {
+            if (cameraView != null && cameraView.getCamera() != null && isHaveAutoFocus())
                 cameraView.getCamera().autoFocus(autoFocusCallback);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     };
+
+    private boolean isHaveAutoFocus() {
+        if (packageManager == null) {
+            packageManager = getActivity().getPackageManager();
+        }
+        return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -55,6 +61,20 @@ public class SimpleScannerFragment extends Fragment {
         scanner = new ImageScanner();
         scanner.setConfig(0, Config.X_DENSITY, 3);
         scanner.setConfig(0, Config.Y_DENSITY, 3);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (isHaveAutoFocus())
+            cameraView.getCamera().cancelAutoFocus();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (isHaveAutoFocus())
+            cameraView.getCamera().autoFocus(autoFocusCallback);
     }
 
     @Override
