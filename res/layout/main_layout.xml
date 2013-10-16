@@ -4,7 +4,7 @@
                 android:layout_height="fill_parent">
 
     <fragment
-        class="garin.artemiy.simplescanner.library.SimpleScannerFragment"
+        class="garin.artemiy.simplescanner.library.fragments.SimpleScannerFragment"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"/>
 
