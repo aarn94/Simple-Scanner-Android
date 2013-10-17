@@ -28,7 +28,9 @@ public class SimpleScannerFragment extends Fragment {
     private SimpleCameraView cameraView;
     private PackageManager packageManager;
     private Handler autoFocusHandler = new Handler();
+    private Runnable runAutoFocus = new CustomAutoFocusRunnable();
     private Camera.PreviewCallback previewCallback = new CustomPreviewCallback();
+    private Camera.AutoFocusCallback autoFocusCallback = new CustomAutoFocusCallback();
     private ScannerListener scannerListener;
 
     static {
@@ -75,24 +77,24 @@ public class SimpleScannerFragment extends Fragment {
         return cameraView;
     }
 
-    private Camera.AutoFocusCallback autoFocusCallback = new Camera.AutoFocusCallback() {
-        public void onAutoFocus(boolean success, Camera camera) {
-            autoFocusHandler.postDelayed(runAutoFocus, REFRESH_TIME);
-        }
-    };
-
-    private Runnable runAutoFocus = new Runnable() {
-        public void run() {
-            if (cameraView != null && cameraView.getCamera() != null && isHaveAutoFocus())
-                cameraView.getCamera().autoFocus(autoFocusCallback);
-        }
-    };
-
     private boolean isHaveAutoFocus() {
         if (packageManager == null) {
             packageManager = getActivity().getPackageManager();
         }
         return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+    }
+
+    private class CustomAutoFocusRunnable implements Runnable {
+        public void run() {
+            if (cameraView != null && cameraView.getCamera() != null && isHaveAutoFocus())
+                cameraView.getCamera().autoFocus(autoFocusCallback);
+        }
+    }
+
+    private class CustomAutoFocusCallback implements Camera.AutoFocusCallback {
+        public void onAutoFocus(boolean success, Camera camera) {
+            autoFocusHandler.postDelayed(runAutoFocus, REFRESH_TIME);
+        }
     }
 
     private class CustomPreviewCallback implements Camera.PreviewCallback {
@@ -119,9 +121,7 @@ public class SimpleScannerFragment extends Fragment {
                 }
 
             }
-
         }
-
     }
 
 }

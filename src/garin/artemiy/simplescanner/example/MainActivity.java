@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
+import android.widget.Toast;
 import garin.artemiy.simplescanner.R;
 import garin.artemiy.simplescanner.library.fragments.SimpleScannerFragment;
 import garin.artemiy.simplescanner.library.listeners.ScannerListener;
@@ -12,7 +13,7 @@ import garin.artemiy.simplescanner.library.listeners.ScannerListener;
 public class MainActivity extends FragmentActivity implements ScannerListener {
 
     private static final long DELAY = 5000;
-    private Handler handler = new Handler();
+    private static final Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,5 +46,7 @@ public class MainActivity extends FragmentActivity implements ScannerListener {
 
     @Override
     public void onDataReceive(String data) {
+        Toast.makeText(this, data, Toast.LENGTH_LONG).show();
     }
+
 }
