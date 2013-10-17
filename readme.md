@@ -15,8 +15,8 @@ public class Your_Activity extends FragmentActivity implements ScannerListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.your_layout);
 
-        SimpleScannerFragment simpleScannerFragment =
-            (SimpleScannerFragment) getSupportFragmentManager().findFragmentById(R.id.scannerFragment);
+        SimpleScannerFragment simpleScannerFragment = (SimpleScannerFragment)
+            getSupportFragmentManager().findFragmentById(R.id.scannerFragment);
         simpleScannerFragment.setScannerListener(this);
 
     }
