@@ -2,12 +2,12 @@
 
 <h2>Install</h2>
 You may import src from project (need delete example folder) or <a href="https://github.com/kvirair/Simple-Scanner-Android/releases">download jar</a> (recommended)
+<br><br>
+**Don't forget** done this:
 <br>
-Don't forget done this:
+— Copy folders **armeabi**, **armeabi-v7a**, **x86** and **zbar.jar** to your libs folder (<a href="http://zbar.sourceforge.net/">project url</a>)
 <br>
-— Copy folders armeabi, armeabi-v7a, x86 and zbar.jar to your libs folder (<a href="http://zbar.sourceforge.net/">project url</a>)
-<br>
-— Copy android-support-v4.jar to your libs (<a href="http://developer.android.com/tools/support-library/setup.html">setup</a>)
+— Copy **android-support-v4.jar** to your libs (<a href="http://developer.android.com/tools/support-library/setup.html">setup</a>)
 
 <h2>Quick start</h2>
 
