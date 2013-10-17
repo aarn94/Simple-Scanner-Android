@@ -6,8 +6,10 @@ import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
 import garin.artemiy.simplescanner.R;
+import garin.artemiy.simplescanner.library.fragments.SimpleScannerFragment;
+import garin.artemiy.simplescanner.library.listeners.ScannerListener;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements ScannerListener {
 
     private static final long DELAY = 5000;
     private Handler handler = new Handler();
@@ -17,6 +19,9 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         final Activity activity = this;
         setContentView(R.layout.main_layout);
+        SimpleScannerFragment simpleScannerFragment =
+                (SimpleScannerFragment) getSupportFragmentManager().findFragmentById(R.id.scannerFragment);
+        simpleScannerFragment.setScannerListener(this);
 
         handler.postDelayed(new Runnable() {
             @Override
@@ -38,4 +43,7 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    public void onDataReceive(String data) {
+    }
 }
