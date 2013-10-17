@@ -5,13 +5,13 @@ You may import src from project or <a href="https://github.com/kvirair/Simple-Sc
 
 <h2>Quick start</h2>
 
-— Create your activity with listener (don't forget this activity to manifest)
+— Create your activity with listener (don't forget add this activity to manifest)
 
 ```java
-public class Your_Activity extends FragmentActivity implements ScannerListener {
+public class YourActivity extends FragmentActivity implements ScannerListener {
 
   @Override
-    public void onCreate(Bundle savedInstanceState) {
+  public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.your_layout);
 
@@ -29,7 +29,7 @@ public class Your_Activity extends FragmentActivity implements ScannerListener {
 }
 ```
 
-— And don't forget add fragment to your_layout
+— And don't forget add fragment to your_layout, for example:
 
 ```java
 <?xml version="1.0" encoding="utf-8"?>
@@ -47,7 +47,9 @@ public class Your_Activity extends FragmentActivity implements ScannerListener {
 </RelativeLayout>
 ```
 
-<h2>Examples for read</h2>
+**That's all!** enjoy.
+
+<h2>Examples for scanning</h2>
 
 ![QR-Code](http://img208.imageshack.us/img208/4696/ors.gif)
 
