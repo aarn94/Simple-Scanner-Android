@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import garin.artemiy.simplescanner.library.listeners.ScannerListener;
 import garin.artemiy.simplescanner.library.views.SimpleCameraView;
 import net.sourceforge.zbar.*;
 
@@ -28,29 +29,14 @@ public class SimpleScannerFragment extends Fragment {
     private PackageManager packageManager;
     private Handler autoFocusHandler = new Handler();
     private Camera.PreviewCallback previewCallback = new CustomPreviewCallback();
+    private ScannerListener scannerListener;
 
     static {
         System.loadLibrary(Z_BAR_LIBRARY);
     }
 
-    private Camera.AutoFocusCallback autoFocusCallback = new Camera.AutoFocusCallback() {
-        public void onAutoFocus(boolean success, Camera camera) {
-            autoFocusHandler.postDelayed(runAutoFocus, REFRESH_TIME);
-        }
-    };
-
-    private Runnable runAutoFocus = new Runnable() {
-        public void run() {
-            if (cameraView != null && cameraView.getCamera() != null && isHaveAutoFocus())
-                cameraView.getCamera().autoFocus(autoFocusCallback);
-        }
-    };
-
-    private boolean isHaveAutoFocus() {
-        if (packageManager == null) {
-            packageManager = getActivity().getPackageManager();
-        }
-        return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+    public void setScannerListener(ScannerListener scannerListener) {
+        this.scannerListener = scannerListener;
     }
 
     @Override
@@ -89,6 +75,26 @@ public class SimpleScannerFragment extends Fragment {
         return cameraView;
     }
 
+    private Camera.AutoFocusCallback autoFocusCallback = new Camera.AutoFocusCallback() {
+        public void onAutoFocus(boolean success, Camera camera) {
+            autoFocusHandler.postDelayed(runAutoFocus, REFRESH_TIME);
+        }
+    };
+
+    private Runnable runAutoFocus = new Runnable() {
+        public void run() {
+            if (cameraView != null && cameraView.getCamera() != null && isHaveAutoFocus())
+                cameraView.getCamera().autoFocus(autoFocusCallback);
+        }
+    };
+
+    private boolean isHaveAutoFocus() {
+        if (packageManager == null) {
+            packageManager = getActivity().getPackageManager();
+        }
+        return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+    }
+
     private class CustomPreviewCallback implements Camera.PreviewCallback {
 
         public void onPreviewFrame(byte[] data, Camera incomingCamera) {
@@ -103,10 +109,17 @@ public class SimpleScannerFragment extends Fragment {
             if (result != 0) {
 
                 SymbolSet scannerResults = scanner.getResults();
+
                 for (Symbol symbol : scannerResults) {
-                    Toast.makeText(getActivity(), symbol.getData(), Toast.LENGTH_LONG).show();
+                    if (scannerListener == null) {
+                        Toast.makeText(getActivity(), symbol.getData(), Toast.LENGTH_LONG).show();
+                    } else {
+                        scannerListener.onDataReceive(symbol.getData());
+                    }
                 }
+
             }
+
         }
 
     }
