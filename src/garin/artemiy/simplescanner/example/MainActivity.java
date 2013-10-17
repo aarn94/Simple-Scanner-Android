@@ -45,7 +45,7 @@ public class MainActivity extends FragmentActivity implements ScannerListener {
     }
 
     @Override
-    public void onDataReceive(String data) {
+    public void onDataReceive(String data, int barcodeType) {
         Toast.makeText(this, data, Toast.LENGTH_LONG).show();
     }
 

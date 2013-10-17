@@ -6,6 +6,6 @@ package garin.artemiy.simplescanner.library.listeners;
  */
 public interface ScannerListener {
 
-    public void onDataReceive(String data);
+    public void onDataReceive(String data, int barcodeType);
 
 }

@@ -34,7 +34,7 @@ public class SimpleScannerFragment extends Fragment {
     private ScannerListener scannerListener;
 
     static {
-        System.loadLibrary(Z_BAR_LIBRARY);
+        System.load(Z_BAR_LIBRARY);
     }
 
     public void setScannerListener(ScannerListener scannerListener) {
@@ -49,6 +49,9 @@ public class SimpleScannerFragment extends Fragment {
         scanner = new ImageScanner();
         scanner.setConfig(0, Config.X_DENSITY, 3);
         scanner.setConfig(0, Config.Y_DENSITY, 3);
+
+        if (isHaveAutoFocus())
+            autoFocusHandler.postDelayed(runAutoFocus, REFRESH_TIME);
     }
 
     @Override
@@ -73,7 +76,7 @@ public class SimpleScannerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        cameraView = new SimpleCameraView(inflater.getContext(), autoFocusCallback, previewCallback);
+        cameraView = new SimpleCameraView(inflater.getContext(), previewCallback);
         return cameraView;
     }
 
@@ -116,7 +119,7 @@ public class SimpleScannerFragment extends Fragment {
                     if (scannerListener == null) {
                         Toast.makeText(getActivity(), symbol.getData(), Toast.LENGTH_LONG).show();
                     } else {
-                        scannerListener.onDataReceive(symbol.getData());
+                        scannerListener.onDataReceive(symbol.getData(), symbol.getType());
                     }
                 }
 

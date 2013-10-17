@@ -1,7 +1,10 @@
 <h3>Version - 1.0</h3>
 
 <h2>Install</h2>
-You may import src from project or <a href="https://github.com/kvirair/Simple-Scanner-Android/releases">download jar</a> (recommended)
+You may import src from project (need delete example folder) or <a href="https://github.com/kvirair/Simple-Scanner-Android/releases">download jar</a> (recommended)
+Don't forget done this:
+— Copy folders armeabi, armeabi-v7a, x86 and zbar.jar to your libs folder (<a href="http://zbar.sourceforge.net/">project url</a>)
+— Copy android-support-v4.jar to your libs (<a href="http://developer.android.com/tools/support-library/setup.html>setup</a>)
 
 <h2>Quick start</h2>
 
@@ -22,7 +25,7 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
     }
 
   @Override
-    public void onDataReceive(String data) {
+    public void onDataReceive(String data, int barcodeType) {
     // your code
   }
 

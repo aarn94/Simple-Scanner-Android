@@ -18,16 +18,12 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
 
     private SurfaceHolder surfaceHolder;
     private Camera camera;
-    private Camera.AutoFocusCallback autoFocusCallback;
     private Camera.PreviewCallback previewCallback;
     private Context context;
 
     @SuppressWarnings("deprecation")
-    public SimpleCameraView(Context context,
-                            Camera.AutoFocusCallback autoFocusCallback,
-                            Camera.PreviewCallback previewCallback) {
+    public SimpleCameraView(Context context, Camera.PreviewCallback previewCallback) {
         super(context);
-        this.autoFocusCallback = autoFocusCallback;
         this.previewCallback = previewCallback;
         this.context = context;
 
@@ -128,7 +124,6 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
             camera.setPreviewDisplay(surfaceHolder);
             camera.setPreviewCallback(previewCallback);
             camera.startPreview();
-            camera.autoFocus(autoFocusCallback);
 
         } catch (Exception e) {
             e.printStackTrace();
