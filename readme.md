@@ -41,8 +41,7 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:gravity="center">
+                android:layout_height="fill_parent">
 
     <fragment
         android:id="@+id/scannerFragment"
