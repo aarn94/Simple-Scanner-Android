@@ -34,7 +34,7 @@ public class SimpleScannerFragment extends Fragment {
     private ScannerListener scannerListener;
 
     static {
-        System.load(Z_BAR_LIBRARY);
+        System.loadLibrary(Z_BAR_LIBRARY);
     }
 
     public void setScannerListener(ScannerListener scannerListener) {
@@ -89,8 +89,12 @@ public class SimpleScannerFragment extends Fragment {
 
     private class CustomAutoFocusRunnable implements Runnable {
         public void run() {
-            if (cameraView != null && cameraView.getCamera() != null && isHaveAutoFocus())
-                cameraView.getCamera().autoFocus(autoFocusCallback);
+            try {
+                if (cameraView != null && cameraView.getCamera() != null && isHaveAutoFocus())
+                    cameraView.getCamera().autoFocus(autoFocusCallback);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
