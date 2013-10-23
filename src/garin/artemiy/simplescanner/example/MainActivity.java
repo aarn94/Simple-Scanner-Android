@@ -10,6 +10,7 @@ import garin.artemiy.simplescanner.R;
 import garin.artemiy.simplescanner.library.fragments.SimpleScannerFragment;
 import garin.artemiy.simplescanner.library.listeners.ScannerListener;
 
+@SuppressWarnings("SameParameterValue")
 public class MainActivity extends FragmentActivity implements ScannerListener {
 
     private static final long DELAY = 5000;

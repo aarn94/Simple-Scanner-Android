@@ -18,6 +18,7 @@ import net.sourceforge.zbar.*;
  * Author: Artemiy Garin
  * Date: 16.10.13
  */
+@SuppressWarnings("CanBeFinal")
 public class SimpleScannerFragment extends Fragment {
 
     private static final String Z_BAR_LIBRARY = "iconv";

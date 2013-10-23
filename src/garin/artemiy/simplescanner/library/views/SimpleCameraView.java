@@ -9,6 +9,7 @@ import android.view.*;
  * Author: Artemiy Garin
  * Date: 16.10.13
  */
+@SuppressWarnings("CanBeFinal")
 public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callback {
 
     private static final int DEGREES_0 = 0;
@@ -101,6 +102,7 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void stopCamera() {
         try {
 
@@ -113,6 +115,7 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void startCamera() {
         try {
 
