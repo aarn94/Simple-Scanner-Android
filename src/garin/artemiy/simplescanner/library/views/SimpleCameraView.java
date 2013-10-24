@@ -65,40 +65,46 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
     }
 
     public void configureCamera(Configuration configuration) {
-        if (camera != null) {
-            Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        try {
 
-            int displayOrientationDegrees = DEGREES_0;
-            switch (display.getRotation()) {
-                case Surface.ROTATION_0:
-                    displayOrientationDegrees = DEGREES_90;
-                    break;
-                case Surface.ROTATION_90:
-                    displayOrientationDegrees = DEGREES_0;
-                    break;
-                case Surface.ROTATION_180:
-                    displayOrientationDegrees = DEGREES_270;
-                    break;
-                case Surface.ROTATION_270:
-                    displayOrientationDegrees = DEGREES_180;
-                    break;
+            if (camera != null) {
+                Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
+                int displayOrientationDegrees = DEGREES_0;
+                switch (display.getRotation()) {
+                    case Surface.ROTATION_0:
+                        displayOrientationDegrees = DEGREES_90;
+                        break;
+                    case Surface.ROTATION_90:
+                        displayOrientationDegrees = DEGREES_0;
+                        break;
+                    case Surface.ROTATION_180:
+                        displayOrientationDegrees = DEGREES_270;
+                        break;
+                    case Surface.ROTATION_270:
+                        displayOrientationDegrees = DEGREES_180;
+                        break;
+                }
+
+                camera.setDisplayOrientation(displayOrientationDegrees);
+
+                Camera.Size previewSize = camera.getParameters().getPreviewSize();
+                float aspect = (float) previewSize.width / previewSize.height;
+
+                ViewGroup.LayoutParams cameraHolderParams = getLayoutParams();
+                if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    cameraHolderParams.height = display.getHeight();
+                    cameraHolderParams.width = (int) (display.getHeight() / aspect);
+                } else {
+                    cameraHolderParams.width = display.getWidth();
+                    cameraHolderParams.height = (int) (display.getWidth() / aspect);
+                }
+
+                setLayoutParams(cameraHolderParams);
             }
 
-            camera.setDisplayOrientation(displayOrientationDegrees);
-
-            Camera.Size previewSize = camera.getParameters().getPreviewSize();
-            float aspect = (float) previewSize.width / previewSize.height;
-
-            ViewGroup.LayoutParams cameraHolderParams = getLayoutParams();
-            if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                cameraHolderParams.height = display.getHeight();
-                cameraHolderParams.width = (int) (display.getHeight() / aspect);
-            } else {
-                cameraHolderParams.width = display.getWidth();
-                cameraHolderParams.height = (int) (display.getWidth() / aspect);
-            }
-
-            setLayoutParams(cameraHolderParams);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
