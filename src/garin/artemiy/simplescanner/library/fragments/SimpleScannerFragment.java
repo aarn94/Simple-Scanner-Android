@@ -28,10 +28,12 @@ public class SimpleScannerFragment extends Fragment {
     private ImageScanner scanner;
     private SimpleCameraView cameraView;
     private PackageManager packageManager;
+
     private Handler autoFocusHandler = new Handler();
     private Runnable runAutoFocus = new CustomAutoFocusRunnable();
     private Camera.PreviewCallback previewCallback = new CustomPreviewCallback();
     private Camera.AutoFocusCallback autoFocusCallback = new CustomAutoFocusCallback();
+
     private ScannerListener scannerListener;
 
     static {
