@@ -11,6 +11,7 @@ import android.view.*;
  */
 @SuppressWarnings("CanBeFinal")
 public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callback {
+
     private static final int DEGREES_0 = 0;
     private static final int DEGREES_90 = 90;
     private static final int DEGREES_180 = 180;
