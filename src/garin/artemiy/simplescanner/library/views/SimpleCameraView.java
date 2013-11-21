@@ -11,7 +11,6 @@ import android.view.*;
  */
 @SuppressWarnings("CanBeFinal")
 public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callback {
-
     private static final int DEGREES_0 = 0;
     private static final int DEGREES_90 = 90;
     private static final int DEGREES_180 = 180;
@@ -34,7 +33,7 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
 
         setKeepScreenOn(true);
 
-        getCamera();
+        configureCamera(getResources().getConfiguration());
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
@@ -64,8 +63,9 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
         return camera;
     }
 
-    public void configureCamera(Configuration configuration) {
+    public boolean configureCamera(Configuration configuration) {
         try {
+            getCamera();
 
             if (camera != null) {
                 Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -101,11 +101,17 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
                 }
 
                 setLayoutParams(cameraHolderParams);
+
+                return true;
+
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+
+        return false;
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -131,7 +137,8 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
 
             camera.reconnect();
             camera.setPreviewDisplay(surfaceHolder);
-            camera.setPreviewCallback(previewCallback);
+            if (previewCallback != null)
+                camera.setPreviewCallback(previewCallback);
             camera.startPreview();
 
         } catch (Exception e) {
