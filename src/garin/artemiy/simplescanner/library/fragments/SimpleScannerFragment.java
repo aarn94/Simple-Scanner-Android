@@ -24,10 +24,14 @@ public class SimpleScannerFragment extends Fragment {
     private static final String Z_BAR_LIBRARY = "iconv";
     private static final String GREY_COLOR_SPACE = "Y800";
     private static final long REFRESH_TIME = 2000;
+    private static final long DELAY = 1000;
 
     private ImageScanner scanner;
     private SimpleCameraView cameraView;
     private PackageManager packageManager;
+    private Handler handler = new Handler();
+    private Runnable reconfigureRunnable;
+    private boolean isConfigured;
 
     private Handler autoFocusHandler = new Handler();
     private Runnable runAutoFocus = new CustomAutoFocusRunnable();
@@ -47,7 +51,16 @@ public class SimpleScannerFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        cameraView.configureCamera(getResources().getConfiguration());
+        reconfigureRunnable = new Runnable() {
+            @Override
+            public void run() {
+                isConfigured = cameraView.configureCamera(getResources().getConfiguration());
+                if (!isConfigured)
+                    handler.postDelayed(this, DELAY);
+            }
+        };
+
+        configureCamera(getResources().getConfiguration());
 
         scanner = new ImageScanner();
         scanner.setConfig(0, Config.X_DENSITY, 3);
@@ -78,7 +91,7 @@ public class SimpleScannerFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        cameraView.configureCamera(newConfig);
+        configureCamera(newConfig);
     }
 
     @Override
@@ -92,6 +105,13 @@ public class SimpleScannerFragment extends Fragment {
             packageManager = getActivity().getPackageManager();
         }
         return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
+    }
+
+    private void configureCamera(Configuration configuration) {
+        isConfigured = cameraView.configureCamera(configuration);
+        if (!isConfigured) {
+            handler.postDelayed(reconfigureRunnable, DELAY);
+        }
     }
 
     private class CustomAutoFocusRunnable implements Runnable {
