@@ -29,7 +29,7 @@ public class SimpleScannerFragment extends Fragment {
     private ImageScanner scanner;
     private SimpleCameraView cameraView;
     private PackageManager packageManager;
-    private Handler handler = new Handler();
+    private Handler configurationHandler = new Handler();
     private Runnable reconfigureRunnable;
     private boolean isConfigured;
 
@@ -56,7 +56,7 @@ public class SimpleScannerFragment extends Fragment {
             public void run() {
                 isConfigured = cameraView.configureCamera(getResources().getConfiguration());
                 if (!isConfigured)
-                    handler.postDelayed(this, DELAY);
+                    configurationHandler.postDelayed(this, DELAY);
             }
         };
 
@@ -110,7 +110,7 @@ public class SimpleScannerFragment extends Fragment {
     private void configureCamera(Configuration configuration) {
         isConfigured = cameraView.configureCamera(configuration);
         if (!isConfigured) {
-            handler.postDelayed(reconfigureRunnable, DELAY);
+            configurationHandler.postDelayed(reconfigureRunnable, DELAY);
         }
     }
 
