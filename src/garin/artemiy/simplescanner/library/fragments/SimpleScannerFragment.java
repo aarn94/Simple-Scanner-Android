@@ -73,7 +73,7 @@ public class SimpleScannerFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if (isHaveAutoFocus())
+        if (isHaveAutoFocus() && cameraView.getCamera() != null)
             cameraView.getCamera().cancelAutoFocus();
     }
 
