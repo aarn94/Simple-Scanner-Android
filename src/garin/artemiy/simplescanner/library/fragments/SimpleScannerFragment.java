@@ -54,9 +54,13 @@ public class SimpleScannerFragment extends Fragment {
         reconfigureRunnable = new Runnable() {
             @Override
             public void run() {
-                isConfigured = cameraView.configureCamera(getResources().getConfiguration());
-                if (!isConfigured)
-                    configurationHandler.postDelayed(this, DELAY);
+                try {
+                    isConfigured = cameraView.configureCamera(getResources().getConfiguration());
+                    if (!isConfigured)
+                        configurationHandler.postDelayed(this, DELAY);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         };
 
