@@ -44,11 +44,12 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
 
-    <fragment
+   <fragment
         android:id="@+id/scannerFragment"
+        android:layout_centerInParent="true"
         class="garin.artemiy.simplescanner.library.fragments.SimpleScannerFragment"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"/>
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
 
 </RelativeLayout>
 ```
