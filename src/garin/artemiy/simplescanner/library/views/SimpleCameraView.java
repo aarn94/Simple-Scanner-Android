@@ -22,7 +22,6 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
     private Camera.PreviewCallback previewCallback;
     private Context context;
 
-    @SuppressWarnings("deprecation")
     public SimpleCameraView(Context context, Camera.PreviewCallback previewCallback) {
         super(context);
         this.previewCallback = previewCallback;
