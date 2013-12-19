@@ -75,19 +75,19 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
 — If your QR-code encoding not by UTF-8, for example, you use «cp1252», you can solve this issue by following code:
 ```java
  @Override
-    public void onDataReceive(String data, int barcodeType) {
-       if (barcodeType == Symbol.QRCODE) {
+ public void onDataReceive(String data, int barcodeType) {
+    if (barcodeType == Symbol.QRCODE) {
 
-             try {
+       try {
 
-                 byte[] bytes = data.getBytes("cp1252");
-                 data = new String(bytes, "cp1251");
+          byte[] bytes = data.getBytes("cp1252");
+          data = new String(bytes, "cp1251");
 
-             } catch (UnsupportedEncodingException e) {
-                 data = e.getMessage();
-             }
+       } catch (UnsupportedEncodingException e) {
+          data = e.getMessage();
+       }
 
-             Toast.makeText(this, data, Toast.LENGTH_LONG).show();
+          Toast.makeText(this, data, Toast.LENGTH_LONG).show();
        }
     }
 ```
