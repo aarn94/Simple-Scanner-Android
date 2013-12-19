@@ -55,7 +55,7 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
 ```
 
 — Also permissions for **AndroidManifest**:
-```
+```java
 ...
     <uses-permission android:name="android.permission.CAMERA"/>
 
@@ -73,7 +73,7 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
 <h2>Encoding hints</h2>
 
 — If your QR-code encoding not by UTF-8, for example, you use «cp1252», you can solve this issue by following code:
-```
+```java
  @Override
     public void onDataReceive(String data, int barcodeType) {
        if (barcodeType == Symbol.QRCODE) {
