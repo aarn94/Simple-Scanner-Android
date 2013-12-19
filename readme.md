@@ -88,8 +88,8 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
        }
 
           Toast.makeText(this, data, Toast.LENGTH_LONG).show();
-       }
     }
+ }
 ```
 This is a small hack, because ZBar always use inside UTF-8 encoding.
 
