@@ -77,6 +77,7 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
  @Override
     public void onDataReceive(String data, int barcodeType) {
        if (barcodeType == Symbol.QRCODE) {
+
              try {
 
                  byte[] bytes = data.getBytes("cp1252");
@@ -90,7 +91,7 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
        }
     }
 ```
-This is a small hack, because ZBar always use inside UTF-8 encoding
+This is a small hack, because ZBar always use inside UTF-8 encoding.
 
 <h2>License</h2>
 ```
