@@ -70,6 +70,28 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
 
 ![QR-Code](http://img208.imageshack.us/img208/4696/ors.gif)
 
+<h2>Encoding hints</h2>
+
+— If your QR-code encoding not by UTF-8, for example, you use «cp1252», you can solve this issue by following code:
+```
+ @Override
+    public void onDataReceive(String data, int barcodeType) {
+       if (barcodeType == Symbol.QRCODE) {
+             try {
+
+                 byte[] bytes = data.getBytes("cp1252");
+                 data = new String(bytes, "cp1251");
+
+             } catch (UnsupportedEncodingException e) {
+                 data = e.getMessage();
+             }
+
+             Toast.makeText(this, data, Toast.LENGTH_LONG).show();
+       }
+    }
+```
+This is a small hack, because ZBar always use inside UTF-8 encoding
+
 <h2>License</h2>
 ```
 Copyright (C) 2013 Artemiy Garin
