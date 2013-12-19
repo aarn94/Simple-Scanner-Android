@@ -54,7 +54,7 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
 </RelativeLayout>
 ```
 
-— Also permissions for AndroidManifest:
+— Also permissions for **AndroidManifest**:
 ```
 ...
     <uses-permission android:name="android.permission.CAMERA"/>
