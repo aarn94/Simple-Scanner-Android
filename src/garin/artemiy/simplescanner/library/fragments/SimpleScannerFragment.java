@@ -23,17 +23,17 @@ public class SimpleScannerFragment extends Fragment {
 
     private static final String Z_BAR_LIBRARY = "iconv";
     private static final String GREY_COLOR_SPACE = "Y800";
-    private static final long REFRESH_TIME = 2000;
-    private static final long DELAY = 1000;
+    private static final long AUTOFOCUS_REFRESH_DELAY = 2000;
+    private static final long CONFIGURE_DELAY = 1000;
 
     private ImageScanner scanner;
     private SimpleCameraView cameraView;
     private PackageManager packageManager;
-    private Handler configurationHandler = new Handler();
-    private Runnable reconfigureRunnable;
-    private boolean isConfigured;
 
+    private Handler configurationHandler = new Handler();
     private Handler autoFocusHandler = new Handler();
+
+    private Runnable reconfigureRunnable = new CustomConfigureRunnable();
     private Runnable runAutoFocus = new CustomAutoFocusRunnable();
     private Camera.PreviewCallback previewCallback = new CustomPreviewCallback();
     private Camera.AutoFocusCallback autoFocusCallback = new CustomAutoFocusCallback();
@@ -51,35 +51,20 @@ public class SimpleScannerFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        reconfigureRunnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    isConfigured = cameraView.configureCamera(getResources().getConfiguration());
-                    if (!isConfigured)
-                        configurationHandler.postDelayed(this, DELAY);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        configureCamera(getResources().getConfiguration());
 
         scanner = new ImageScanner();
         scanner.setConfig(0, Config.X_DENSITY, 3);
         scanner.setConfig(0, Config.Y_DENSITY, 3);
-
-        if (isHaveAutoFocus())
-            autoFocusHandler.postDelayed(runAutoFocus, REFRESH_TIME);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         try {
-            if (isHaveAutoFocus() && cameraView.getCamera() != null)
-                cameraView.getCamera().cancelAutoFocus();
+
+            cameraView.stopCamera();
+            stopAutofocus();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,17 +74,32 @@ public class SimpleScannerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         try {
-            if (isHaveAutoFocus())
-                cameraView.getCamera().autoFocus(autoFocusCallback);
+
+            configureCamera();
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void stopAutofocus() {
+        if (isHaveAutoFocus() && cameraView.getCamera() != null) {
+            autoFocusHandler.removeCallbacks(runAutoFocus);
+            cameraView.getCamera().cancelAutoFocus();
+        }
+    }
+
+    private void startAutofocus() {
+        if (isHaveAutoFocus()) {
+            autoFocusHandler.postDelayed(runAutoFocus, AUTOFOCUS_REFRESH_DELAY);
+            cameraView.getCamera().autoFocus(autoFocusCallback);
         }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        configureCamera(newConfig);
+        configureCamera();
     }
 
     @Override
@@ -115,11 +115,16 @@ public class SimpleScannerFragment extends Fragment {
         return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
     }
 
-    private void configureCamera(Configuration configuration) {
-        isConfigured = cameraView.configureCamera(configuration);
-        if (!isConfigured) {
-            configurationHandler.postDelayed(reconfigureRunnable, DELAY);
+    private void configureCamera() {
+        configurationHandler.postDelayed(reconfigureRunnable, CONFIGURE_DELAY);
+    }
+
+    private class CustomAutoFocusCallback implements Camera.AutoFocusCallback {
+
+        public void onAutoFocus(boolean success, Camera camera) {
+            autoFocusHandler.postDelayed(runAutoFocus, AUTOFOCUS_REFRESH_DELAY);
         }
+
     }
 
     private class CustomAutoFocusRunnable implements Runnable {
@@ -133,9 +138,25 @@ public class SimpleScannerFragment extends Fragment {
         }
     }
 
-    private class CustomAutoFocusCallback implements Camera.AutoFocusCallback {
-        public void onAutoFocus(boolean success, Camera camera) {
-            autoFocusHandler.postDelayed(runAutoFocus, REFRESH_TIME);
+    private class CustomConfigureRunnable implements Runnable {
+        @Override
+        public void run() {
+            try {
+
+                boolean isConfigured = cameraView.configureCamera(getResources().getConfiguration());
+
+                if (!isConfigured) {
+                    configurationHandler.postDelayed(this, CONFIGURE_DELAY);
+                    cameraView.stopCamera();
+                } else {
+                    configurationHandler.removeCallbacks(this);
+                    cameraView.startCamera();
+                    startAutofocus();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

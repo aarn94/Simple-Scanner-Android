@@ -54,9 +54,7 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
 
     public Camera getCamera() {
         try {
-            if (camera == null) {
-                camera = Camera.open();
-            }
+            camera = Camera.open();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,6 +119,7 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
             camera.stopPreview();
             camera.setPreviewCallback(null);
             camera.release();
+            camera = null;
 
         } catch (Exception e) {
             e.printStackTrace();
