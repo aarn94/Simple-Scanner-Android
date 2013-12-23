@@ -1,10 +1,12 @@
 package garin.artemiy.simplescanner.library.fragments;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +25,15 @@ public class SimpleScannerFragment extends Fragment {
 
     private static final String Z_BAR_LIBRARY = "iconv";
     private static final String GREY_COLOR_SPACE = "Y800";
+
     private static final long AUTOFOCUS_REFRESH_DELAY = 2000;
     private static final long CONFIGURE_DELAY = 1000;
+    private static final long VIBRATE_TIME = 300;
 
     private ImageScanner scanner;
     private SimpleCameraView cameraView;
     private PackageManager packageManager;
+    private Vibrator vibrator;
 
     private Handler configurationHandler = new Handler();
     private Handler autoFocusHandler = new Handler();
@@ -51,6 +56,8 @@ public class SimpleScannerFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
         scanner = new ImageScanner();
         scanner.setConfig(0, Config.X_DENSITY, 3);
@@ -174,6 +181,8 @@ public class SimpleScannerFragment extends Fragment {
             if (result != 0) {
 
                 SymbolSet scannerResults = scanner.getResults();
+
+                vibrator.vibrate(VIBRATE_TIME);
 
                 for (Symbol symbol : scannerResults) {
                     if (scannerListener == null) {
