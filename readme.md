@@ -77,15 +77,8 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
  @Override
  public void onDataReceive(String data, int barcodeType) {
     if (barcodeType == Symbol.QRCODE) {
-
-       try {
-
-          byte[] bytes = data.getBytes("cp1252");
-          data = new String(bytes, "cp1251");
-
-       } catch (UnsupportedEncodingException e) {
-          data = e.getMessage();
-       }
+          byte[] bytes = data.getBytes(WINDOWS_1252);
+          data = new String(bytes, WINDOWS_1252);
 
           Toast.makeText(this, data, Toast.LENGTH_LONG).show();
     }
