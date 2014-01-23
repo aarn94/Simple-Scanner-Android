@@ -2,7 +2,9 @@ package garin.artemiy.simplescanner.library.views;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Point;
 import android.hardware.Camera;
+import android.os.Build;
 import android.view.*;
 
 /**
@@ -22,6 +24,7 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
     private Camera.PreviewCallback previewCallback;
     private Context context;
 
+    @SuppressWarnings("deprecation")
     public SimpleCameraView(Context context, Camera.PreviewCallback previewCallback) {
         super(context);
         this.previewCallback = previewCallback;
@@ -61,12 +64,26 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
         return camera;
     }
 
+    @SuppressWarnings("deprecation")
     public boolean configureCamera(Configuration configuration) {
         try {
             getCamera();
 
             if (camera != null) {
                 Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
+                int width;
+                int height;
+
+                if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2) {
+                    width = display.getWidth();
+                    height = display.getHeight();
+                } else {
+                    Point size = new Point();
+                    display.getSize(size);
+                    width = size.x;
+                    height = size.y;
+                }
 
                 int displayOrientationDegrees = DEGREES_0;
                 switch (display.getRotation()) {
@@ -91,11 +108,11 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
 
                 ViewGroup.LayoutParams cameraHolderParams = getLayoutParams();
                 if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    cameraHolderParams.height = display.getHeight();
-                    cameraHolderParams.width = (int) (display.getHeight() / aspect);
+                    cameraHolderParams.height = height;
+                    cameraHolderParams.width = (int) (height / aspect);
                 } else {
-                    cameraHolderParams.width = display.getWidth();
-                    cameraHolderParams.height = (int) (display.getWidth() / aspect);
+                    cameraHolderParams.width = width;
+                    cameraHolderParams.height = (int) (width / aspect);
                 }
 
                 setLayoutParams(cameraHolderParams);
