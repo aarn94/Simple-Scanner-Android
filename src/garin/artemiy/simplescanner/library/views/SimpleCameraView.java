@@ -24,7 +24,7 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
     private Camera.PreviewCallback previewCallback;
     private Context context;
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "ConstantConditions"})
     public SimpleCameraView(Context context, Camera.PreviewCallback previewCallback) {
         super(context);
         this.previewCallback = previewCallback;
@@ -64,14 +64,13 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
         return camera;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "ConstantConditions"})
     public boolean configureCamera(Configuration configuration) {
         try {
             getCamera();
 
             if (camera != null) {
                 Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-
                 int width;
                 int height;
 
@@ -85,36 +84,7 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
                     height = size.y;
                 }
 
-                int displayOrientationDegrees = DEGREES_0;
-                int orientation = getResources().getConfiguration().orientation;
-
-                switch (display.getRotation()) {
-                    case Surface.ROTATION_0:
-                        if (orientation == Configuration.ORIENTATION_PORTRAIT)
-                            displayOrientationDegrees = DEGREES_90;
-                        else
-                            displayOrientationDegrees = DEGREES_0;
-                        break;
-                    case Surface.ROTATION_90:
-                        if (orientation == Configuration.ORIENTATION_LANDSCAPE)
-                            displayOrientationDegrees = DEGREES_0;
-                        else
-                            displayOrientationDegrees = DEGREES_270;
-                        break;
-                    case Surface.ROTATION_180:
-                        if (orientation == Configuration.ORIENTATION_PORTRAIT)
-                            displayOrientationDegrees = DEGREES_270;
-                        else
-                            displayOrientationDegrees = DEGREES_180;
-                        break;
-                    case Surface.ROTATION_270:
-                        if (orientation == Configuration.ORIENTATION_LANDSCAPE)
-                            displayOrientationDegrees = DEGREES_180;
-                        else
-                            displayOrientationDegrees = DEGREES_90;
-                        break;
-                }
-
+                int displayOrientationDegrees = getDisplayOrientationDegrees(display);
                 camera.setDisplayOrientation(displayOrientationDegrees);
 
                 Camera.Size previewSize = camera.getParameters().getPreviewSize();
@@ -132,21 +102,54 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
                 setLayoutParams(cameraHolderParams);
 
                 return true;
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
 
         return false;
     }
 
+    @SuppressWarnings("ConstantConditions")
+    private int getDisplayOrientationDegrees(Display display) {
+        int displayOrientationDegrees;
+        int orientation = getResources().getConfiguration().orientation;
+
+        switch (display.getRotation()) {
+            case Surface.ROTATION_0:
+                if (orientation == Configuration.ORIENTATION_PORTRAIT)
+                    displayOrientationDegrees = DEGREES_90;
+                else
+                    displayOrientationDegrees = DEGREES_0;
+                break;
+            case Surface.ROTATION_90:
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    displayOrientationDegrees = DEGREES_0;
+                else
+                    displayOrientationDegrees = DEGREES_270;
+                break;
+            case Surface.ROTATION_180:
+                if (orientation == Configuration.ORIENTATION_PORTRAIT)
+                    displayOrientationDegrees = DEGREES_270;
+                else
+                    displayOrientationDegrees = DEGREES_180;
+                break;
+            case Surface.ROTATION_270:
+                if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    displayOrientationDegrees = DEGREES_180;
+                else
+                    displayOrientationDegrees = DEGREES_90;
+                break;
+            default:
+                displayOrientationDegrees = DEGREES_0;
+        }
+
+        return displayOrientationDegrees;
+    }
+
     @SuppressWarnings("WeakerAccess")
     public void stopCamera() {
         try {
-
             camera.stopPreview();
             camera.setPreviewCallback(null);
             camera.release();
@@ -160,7 +163,6 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
     @SuppressWarnings("WeakerAccess")
     public void startCamera() {
         try {
-
             if (surfaceHolder.getSurface() == null) {
                 return;
             }
