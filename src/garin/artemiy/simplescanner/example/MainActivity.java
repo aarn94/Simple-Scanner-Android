@@ -20,7 +20,7 @@ public class MainActivity extends FragmentActivity implements ScannerListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Activity activity = this;
-        setContentView(R.layout.main_layout);
+        setContentView(R.layout.activity_main_layout);
         SimpleScannerFragment simpleScannerFragment =
                 (SimpleScannerFragment) getSupportFragmentManager().findFragmentById(R.id.scannerFragment);
         simpleScannerFragment.setScannerListener(this);
