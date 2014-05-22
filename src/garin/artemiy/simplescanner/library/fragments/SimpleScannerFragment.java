@@ -169,29 +169,33 @@ public class SimpleScannerFragment extends Fragment {
 
     private class CustomPreviewCallback implements Camera.PreviewCallback {
 
+        @SuppressWarnings("ConstantConditions")
         public void onPreviewFrame(byte[] data, Camera incomingCamera) {
-            Camera.Parameters cameraParameters = incomingCamera.getParameters();
-            Camera.Size previewSize = cameraParameters.getPreviewSize();
+            try {
+                Camera.Parameters cameraParameters = incomingCamera.getParameters();
+                Camera.Size previewSize = cameraParameters.getPreviewSize();
 
-            Image barcode = new Image(previewSize.width, previewSize.height, GREY_COLOR_SPACE);
-            barcode.setData(data);
+                Image barcode = new Image(previewSize.width, previewSize.height, GREY_COLOR_SPACE);
+                barcode.setData(data);
 
-            int result = scanner.scanImage(barcode);
+                int result = scanner.scanImage(barcode);
+                if (result != 0) {
 
-            if (result != 0) {
+                    SymbolSet scannerResults = scanner.getResults();
 
-                SymbolSet scannerResults = scanner.getResults();
+                    vibrator.vibrate(VIBRATE_TIME);
 
-                vibrator.vibrate(VIBRATE_TIME);
-
-                for (Symbol symbol : scannerResults) {
-                    if (scannerListener == null) {
-                        Toast.makeText(getActivity(), symbol.getData(), Toast.LENGTH_LONG).show();
-                    } else {
-                        scannerListener.onDataReceive(symbol.getData(), symbol.getType());
+                    for (Symbol symbol : scannerResults) {
+                        if (scannerListener == null) {
+                            Toast.makeText(getActivity(), symbol.getData(), Toast.LENGTH_LONG).show();
+                        } else {
+                            scannerListener.onDataReceive(symbol.getData(), symbol.getType());
+                        }
                     }
-                }
 
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
