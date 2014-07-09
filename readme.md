@@ -68,10 +68,6 @@ public class YourActivity extends FragmentActivity implements ScannerListener {
 
 **That's all!** Enjoy.
 
-<h2>Examples for scanning</h2>
-
-![QR-Code](http://img208.imageshack.us/img208/4696/ors.gif)
-
 <h2>Encoding hints</h2>
 
 — If your QR-code encoding not by UTF-8, for example, you use «cp1252», you can solve this issue by following code:
