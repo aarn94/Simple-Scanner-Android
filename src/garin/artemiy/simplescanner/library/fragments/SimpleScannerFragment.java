@@ -56,7 +56,6 @@ public class SimpleScannerFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         vibrator = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
         scanner = new ImageScanner();
@@ -68,10 +67,8 @@ public class SimpleScannerFragment extends Fragment {
     public void onPause() {
         super.onPause();
         try {
-
             cameraView.stopCamera();
             stopAutofocus();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,9 +78,7 @@ public class SimpleScannerFragment extends Fragment {
     public void onResume() {
         super.onResume();
         try {
-
             configureCamera();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -116,9 +111,7 @@ public class SimpleScannerFragment extends Fragment {
     }
 
     private boolean isHaveAutoFocus() {
-        if (packageManager == null) {
-            packageManager = getActivity().getPackageManager();
-        }
+        if (packageManager == null) packageManager = getActivity().getPackageManager();
         return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
     }
 
@@ -127,11 +120,9 @@ public class SimpleScannerFragment extends Fragment {
     }
 
     private class CustomAutoFocusCallback implements Camera.AutoFocusCallback {
-
         public void onAutoFocus(boolean success, Camera camera) {
             autoFocusHandler.postDelayed(runAutoFocus, AUTOFOCUS_REFRESH_DELAY);
         }
-
     }
 
     private class CustomAutoFocusRunnable implements Runnable {
@@ -149,7 +140,6 @@ public class SimpleScannerFragment extends Fragment {
         @Override
         public void run() {
             try {
-
                 boolean isConfigured = cameraView.configureCamera(getResources().getConfiguration());
 
                 if (!isConfigured) {
@@ -174,25 +164,19 @@ public class SimpleScannerFragment extends Fragment {
             try {
                 Camera.Parameters cameraParameters = incomingCamera.getParameters();
                 Camera.Size previewSize = cameraParameters.getPreviewSize();
-
                 Image barcode = new Image(previewSize.width, previewSize.height, GREY_COLOR_SPACE);
                 barcode.setData(data);
 
-                int result = scanner.scanImage(barcode);
-                if (result != 0) {
-
+                if (scanner.scanImage(barcode) != 0) {
                     SymbolSet scannerResults = scanner.getResults();
 
-                    vibrator.vibrate(VIBRATE_TIME);
+                    if (vibrator != null) vibrator.vibrate(VIBRATE_TIME);
 
-                    for (Symbol symbol : scannerResults) {
-                        if (scannerListener == null) {
+                    for (Symbol symbol : scannerResults)
+                        if (scannerListener == null)
                             Toast.makeText(getActivity(), symbol.getData(), Toast.LENGTH_LONG).show();
-                        } else {
+                        else
                             scannerListener.onDataReceive(symbol.getData(), symbol.getType());
-                        }
-                    }
-
                 }
             } catch (Exception e) {
                 e.printStackTrace();
