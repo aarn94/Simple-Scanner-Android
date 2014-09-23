@@ -159,24 +159,30 @@ public class SimpleScannerFragment extends Fragment {
 
     private class CustomPreviewCallback implements Camera.PreviewCallback {
 
+        private static final long SNAPSHOT_DELAY = 3500;
+        private long lastSnapshotTime;
+
         @SuppressWarnings("ConstantConditions")
         public void onPreviewFrame(byte[] data, Camera incomingCamera) {
             try {
-                Camera.Parameters cameraParameters = incomingCamera.getParameters();
-                Camera.Size previewSize = cameraParameters.getPreviewSize();
-                Image barcode = new Image(previewSize.width, previewSize.height, GREY_COLOR_SPACE);
-                barcode.setData(data);
+                if (System.currentTimeMillis() > lastSnapshotTime) {
+                    lastSnapshotTime = System.currentTimeMillis() + SNAPSHOT_DELAY;
 
-                if (scanner.scanImage(barcode) != 0) {
-                    SymbolSet scannerResults = scanner.getResults();
+                    Camera.Parameters cameraParameters = incomingCamera.getParameters();
+                    Camera.Size previewSize = cameraParameters.getPreviewSize();
+                    Image barcode = new Image(previewSize.width, previewSize.height, GREY_COLOR_SPACE);
+                    barcode.setData(data);
 
-                    if (vibrator != null) vibrator.vibrate(VIBRATE_TIME);
+                    if (scanner.scanImage(barcode) != 0) {
+                        SymbolSet scannerResults = scanner.getResults();
 
-                    for (Symbol symbol : scannerResults)
-                        if (scannerListener == null)
-                            Toast.makeText(getActivity(), symbol.getData(), Toast.LENGTH_LONG).show();
-                        else
-                            scannerListener.onDataReceive(symbol.getData(), symbol.getType());
+                        if (vibrator != null) vibrator.vibrate(VIBRATE_TIME);
+
+                        for (Symbol symbol : scannerResults)
+                            if (scannerListener == null)
+                                Toast.makeText(getActivity(), symbol.getData(), Toast.LENGTH_LONG).show();
+                            else scannerListener.onDataReceive(symbol.getData(), symbol.getType());
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
