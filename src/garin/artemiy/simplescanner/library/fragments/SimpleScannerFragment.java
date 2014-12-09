@@ -25,7 +25,6 @@ public class SimpleScannerFragment extends Fragment {
 
     private static final String Z_BAR_LIBRARY = "iconv";
     private static final String GREY_COLOR_SPACE = "Y800";
-
     private static final long AUTOFOCUS_REFRESH_DELAY = 3000;
     private static final long CONFIGURE_DELAY = 500;
     private static final long VIBRATE_TIME = 300;

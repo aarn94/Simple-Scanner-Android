@@ -35,7 +35,6 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
         surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
         setKeepScreenOn(true);
-
         configureCamera(getResources().getConfiguration());
     }
 
@@ -169,7 +168,6 @@ public class SimpleCameraView extends SurfaceView implements SurfaceHolder.Callb
     public void startCamera() {
         try {
             if (surfaceHolder.getSurface() == null) return;
-
             camera.reconnect();
             camera.setPreviewDisplay(surfaceHolder);
             if (previewCallback != null) camera.setPreviewCallback(previewCallback);
